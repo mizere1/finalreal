@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile - Royal African College</title>
+  <style>
+    :root {
+      --primary: #0066cc;
+      --primary-dark: #004a99;
+      --accent: #ffb400;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --text-dark: #333;
+      --text-light: #fff;
+      --border: #e2e8f0;
+      --box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      --border-radius: 12px;
+      --transition: all 0.3s ease;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f9f9f9 0%, #f0f7ff 100%);
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
+    .hidden { display: none !important; }
+    header {
+      background: white;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 1rem 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 1.5rem;
+    }
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo img { height: 50px; }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 600;
+      position: relative;
+      padding-bottom: 4px;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 3px;
+      background: var(--accent);
+      transition: var(--transition);
+    }
+    nav a:hover::after { width: 100%; }
+    .profile-section { padding: 3rem 0; }
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      background: var(--primary);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .btn:hover { background: var(--primary-dark); }
+    .profile-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 992px) {
+      .profile-main { grid-template-columns: 280px 1fr; }
+    }
+    .profile-picture-container {
+      text-align: center;
+    }
+    #profile-picture {
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid white;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 1rem;
+    }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .profile-card {
+      background: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      border-top: 4px solid var(--primary);
+    }
+    .profile-card h3 {
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+    .profile-card p {
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .profile-card strong { min-width: 150px; }
+    .view-mode { flex: 1; }
+    .edit-mode {
+      display: none;
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <a href="index.html" class="logo"><img src="logo.png" alt="Royal African College Logo"></a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="admissions.html">Admissions</a></li>
+        <li><a href="academics.html">Academics</a></li>
+        <li><a href="portal.html">Student Portal</a></li>
+        <li><a href="profile.html">Profile</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="profile-section">
+    <div class="container">
+      <div class="profile-header">
+        <h2>User Profile</h2>
+        <div>
+          <button id="edit-profile-btn" class="btn">Edit Profile</button>
+          <button id="save-profile-btn" class="btn hidden">Save Changes</button>
+        </div>
+      </div>
+      <div class="profile-main">
+        <div class="profile-picture-container">
+          <img id="profile-picture" src="https://via.placeholder.com/200" alt="Profile Picture">
+          <input type="file" id="upload-photo" class="hidden" accept="image/*">
+          <button id="change-photo-btn" class="btn" type="button">Change Photo</button>
+        </div>
+        <div class="profile-grid">
+          <div class="profile-card">
+            <h3>Personal Details</h3>
+            <p><strong>Name:</strong> <span class="view-mode" id="user-name"></span><input type="text" id="edit-user-name" class="edit-mode"></p>
+            <p><strong>Email:</strong> <span id="user-email"></span></p>
+            <p><strong>Age:</strong> <span class="view-mode" id="user-age"></span><input type="number" id="edit-user-age" class="edit-mode"></p>
+            <p><strong>Program of Interest:</strong> <span class="view-mode" id="user-program"></span><input type="text" id="edit-user-program" class="edit-mode"></p>
+            <p><strong>Date of Birth:</strong> <span class="view-mode" id="user-dob"></span><input type="date" id="edit-user-dob" class="edit-mode"></p>
+            <p><strong>Gender:</strong> <span class="view-mode" id="user-gender"></span><input type="text" id="edit-user-gender" class="edit-mode"></p>
+          </div>
+          <div class="profile-card">
+            <h3>Contact Information</h3>
+            <p><strong>Phone:</strong> <span class="view-mode" id="user-phone"></span><input type="tel" id="edit-user-phone" class="edit-mode"></p>
+            <p><strong>Address:</strong> <span class="view-mode" id="user-address"></span><input type="text" id="edit-user-address" class="edit-mode"></p>
+          </div>
+          <div class="profile-card">
+            <h3>Academic Background</h3>
+            <p><strong>Previous Education:</strong> <span class="view-mode" id="user-prev-education"></span><textarea id="edit-user-prev-education" class="edit-mode"></textarea></p>
+          </div>
+          <div class="profile-card">
+            <h3>Program Selection</h3>
+            <p><strong>Degree:</strong> <span class="view-mode" id="user-degree"></span><input type="text" id="edit-user-degree" class="edit-mode"></p>
+            <p><strong>Major:</strong> <span class="view-mode" id="user-major"></span><input type="text" id="edit-user-major" class="edit-mode"></p>
+            <p><strong>Minor:</strong> <span class="view-mode" id="user-minor"></span><input type="text" id="edit-user-minor" class="edit-mode"></p>
+          </div>
+          <div class="profile-card">
+            <h3>Emergency Contact</h3>
+            <p><strong>Name:</strong> <span class="view-mode" id="user-emergency-name"></span><input type="text" id="edit-user-emergency-name" class="edit-mode"></p>
+            <p><strong>Relationship:</strong> <span class="view-mode" id="user-emergency-relationship"></span><input type="text" id="edit-user-emergency-relationship" class="edit-mode"></p>
+            <p><strong>Phone:</strong> <span class="view-mode" id="user-emergency-phone"></span><input type="tel" id="edit-user-emergency-phone" class="edit-mode"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2024 Royal African College. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const editBtn = document.getElementById('edit-profile-btn');
+  const saveBtn = document.getElementById('save-profile-btn');
+  const profileCards = document.querySelectorAll('.profile-card');
+  const changePhotoBtn = document.getElementById('change-photo-btn');
+  const uploadPhotoInput = document.getElementById('upload-photo');
+  const profilePicture = document.getElementById('profile-picture');
+
+  const fields = [
+    { view: 'user-name', edit: 'edit-user-name' },
+    { view: 'user-age', edit: 'edit-user-age' },
+    { view: 'user-program', edit: 'edit-user-program' },
+    { view: 'user-dob', edit: 'edit-user-dob' },
+    { view: 'user-gender', edit: 'edit-user-gender' },
+    { view: 'user-phone', edit: 'edit-user-phone' },
+    { view: 'user-address', edit: 'edit-user-address' },
+    { view: 'user-prev-education', edit: 'edit-user-prev-education' },
+    { view: 'user-degree', edit: 'edit-user-degree' },
+    { view: 'user-major', edit: 'edit-user-major' },
+    { view: 'user-minor', edit: 'edit-user-minor' },
+    { view: 'user-emergency-name', edit: 'edit-user-emergency-name' },
+    { view: 'user-emergency-relationship', edit: 'edit-user-emergency-relationship' },
+    { view: 'user-emergency-phone', edit: 'edit-user-emergency-phone' }
+  ];
+
+  function loadProfile() {
+    const savedData = JSON.parse(localStorage.getItem('userProfile')) || {};
+    fields.forEach(f => {
+      document.getElementById(f.view).textContent = savedData[f.view] || '';
+      document.getElementById(f.edit).value = savedData[f.view] || '';
+    });
+    if (savedData.photo) profilePicture.src = savedData.photo;
+  }
+
+  function saveProfile() {
+    const data = {};
+    fields.forEach(f => {
+      const value = document.getElementById(f.edit).value.trim();
+      data[f.view] = value;
+      document.getElementById(f.view).textContent = value;
+    });
+    data.photo = profilePicture.src;
+    localStorage.setItem('userProfile', JSON.stringify(data));
+  }
+
+  editBtn.addEventListener('click', function() {
+    profileCards.forEach(card => {
+      card.querySelectorAll('.edit-mode').forEach(input => input.style.display = 'block');
+      card.querySelectorAll('.view-mode').forEach(span => span.style.display = 'none');
+    });
+    editBtn.classList.add('hidden');
+    saveBtn.classList.remove('hidden');
+  });
+
+  saveBtn.addEventListener('click', function() {
+    saveProfile();
+    profileCards.forEach(card => {
+      card.querySelectorAll('.edit-mode').forEach(input => input.style.display = 'none');
+      card.querySelectorAll('.view-mode').forEach(span => span.style.display = 'inline');
+    });
+    saveBtn.classList.add('hidden');
+    editBtn.classList.remove('hidden');
+    alert('Profile updated and saved!');
+  });
+
+  changePhotoBtn.addEventListener('click', () => uploadPhotoInput.click());
+  uploadPhotoInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => profilePicture.src = e.target.result;
+      reader.readAsDataURL(file);
+    }
+  });
+
+  document.getElementById('edit-user-dob').max = new Date().toISOString().split('T')[0];
+  loadProfile();
+});
+</script>
+</body>
+</html>

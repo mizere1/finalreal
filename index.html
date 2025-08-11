@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Royal African College</title>
+  <style>
+    /* === GLOBAL RESETS & VARIABLES === */
+    :root {
+      --primary: #0066cc;
+      --primary-dark: #004a99;
+      --accent: #ff6b00;
+      --dark: #1a1a2e;
+      --light: #f8f9fa;
+      --text: #333;
+      --gray: #6c757d;
+      --border-radius: 10px;
+      --box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: #fafcff;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(135deg, var(--primary), #003d7a);
+      z-index: -1;
+      clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    }
+    
+    img {
+      max-width: 100%;
+      display: block;
+    }
+    
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    section {
+      padding: 60px 0;
+    }
+
+    /* === HEADER & NAVIGATION === */
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+    }
+    
+    .logo img {
+      max-height: 60px;
+      transition: var(--transition);
+    }
+    
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+    
+    nav ul {
+      display: flex;
+      gap: 15px;
+      list-style: none;
+    }
+    
+    nav a {
+      font-weight: 600;
+      color: var(--dark);
+      padding: 8px 15px;
+      border-radius: 30px;
+      position: relative;
+    }
+    
+    nav a::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background: var(--primary);
+      transform: translateX(-50%);
+      transition: var(--transition);
+      border-radius: 2px;
+    }
+    
+    nav a:hover,
+    nav a:focus {
+      color: var(--primary);
+    }
+    
+    nav a:hover::after {
+      width: 60%;
+    }
+    
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 10px;
+      border-radius: 5px;
+    }
+    
+    .hamburger:hover {
+      background: rgba(0, 102, 204, 0.1);
+    }
+
+    /* === HERO SECTION === */
+    .hero {
+      position: relative;
+      text-align: center;
+      margin-top: 20px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+    
+    .slideshow-container {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+    }
+    
+    .slide img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .slide:hover img {
+      transform: scale(1.03);
+    }
+    
+    .hero-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      max-width: 90%;
+      text-align: center;
+      padding: 30px;
+      background: rgba(26, 26, 46, 0.85);
+      border-radius: var(--border-radius);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      width: 90%;
+    }
+    
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 15px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+    }
+    
+    .typewriter {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* === FEATURE GRID === */
+    .why-choose-us .container {
+      position: relative;
+    }
+    
+    .why-choose-us h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 50px;
+      position: relative;
+      color: var(--dark);
+    }
+    
+    .why-choose-us h2::after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+    
+    .feature-card {
+      background: white;
+      padding: 30px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      text-align: center;
+      border-top: 4px solid var(--primary);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card h3 {
+      font-size: 1.4rem;
+      margin: 20px 0 15px;
+      color: var(--dark);
+    }
+    
+    .feature-card p {
+      color: var(--gray);
+      font-size: 1rem;
+    }
+    
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(0, 102, 204, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    
+    .feature-icon img {
+      width: 40px;
+      height: 40px;
+    }
+
+    /* === BUTTONS === */
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50px;
+      text-align: center;
+      font-weight: 600;
+      transition: var(--transition);
+      border: 2px solid var(--primary);
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(0,0,0,0.1);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+    }
+    
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-apply {
+      font-size: 1.2rem;
+      font-weight: 700;
+      padding: 16px 40px;
+      box-shadow: 0 10px 20px rgba(0,102,204,0.3);
+    }
+    
+    .btn-apply:hover {
+      box-shadow: 0 12px 25px rgba(0,102,204,0.4);
+    }
+
+    /* === SECTIONS === */
+    .apply-now {
+      background: linear-gradient(135deg, var(--primary), #003d7a);
+      color: white;
+      text-align: center;
+      padding: 50px 0;
+      margin: 40px 0;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+    
+    .apply-now .container {
+      max-width: 800px;
+    }
+    
+    .student-portal {
+      background: white;
+      text-align: center;
+      padding: 60px 0;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+    }
+    
+    .student-portal h2 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+    
+    .student-portal p {
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto 30px;
+      font-size: 1.1rem;
+    }
+
+    /* === CHAT LAUNCHER === */
+    .chat-launcher {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      cursor: pointer;
+      z-index: 1000;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 5px 20px rgba(0,102,204,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    
+    .chat-launcher:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0,102,204,0.5);
+    }
+    
+    .chat-launcher img {
+      width: 32px;
+      height: 32px;
+      filter: invert(1);
+    }
+    
+    .chat-window-floating {
+      position: fixed;
+      bottom: 120px;
+      right: 30px;
+      background: white;
+      border-radius: var(--border-radius);
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+      z-index: 1001;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      overflow: hidden;
+      transform-origin: bottom right;
+      animation: popIn 0.4s ease;
+    }
+    
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .chat-header {
+      background: var(--primary);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .chat-messages {
+      padding: 20px;
+      height: 300px;
+      overflow-y: auto;
+      background: #f8fafc;
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      max-width: 80%;
+      padding: 12px 15px;
+      border-radius: 18px;
+      line-height: 1.4;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    .bot-message {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-bottom-left-radius: 5px;
+      align-self: flex-start;
+    }
+    
+    .user-message {
+      background: var(--primary);
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+    }
+    
+    .chat-input-form {
+      display: flex;
+      border-top: 1px solid #e2e8f0;
+      background: white;
+    }
+    
+    .chat-input-form input {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+    
+    .chat-input-form .btn {
+      border-radius: 0;
+      margin: 5px;
+      padding: 0 20px;
+    }
+
+    /* === MODAL === */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1002;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+      background: white;
+      margin: 10% auto;
+      padding: 40px;
+      border-radius: var(--border-radius);
+      max-width: 600px;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      animation: modalFade 0.4s ease;
+    }
+    
+    @keyframes modalFade {
+      0% { opacity: 0; transform: translateY(-30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    .close-button {
+      position: absolute;
+      right: 25px;
+      top: 20px;
+      cursor: pointer;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--gray);
+      transition: var(--transition);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .close-button:hover {
+      color: var(--dark);
+      background: #f1f5f9;
+    }
+    
+    #popup-content {
+      text-align: center;
+    }
+    
+    #popup-content h2 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+    
+    #popup-content p {
+      color: var(--gray);
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      line-height: 1.7;
+    }
+
+    /* === FOOTER === */
+    footer {
+      background: var(--dark);
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 60px;
+    }
+    
+    footer .container {
+      max-width: 800px;
+    }
+    
+    footer p {
+      font-size: 1rem;
+      margin-top: 20px;
+      line-height: 1.7;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 992px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .slide img {
+        height: 400px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+        flex-direction: column;
+        background: white;
+        position: absolute;
+        top: 90px;
+        left: 0;
+        width: 100%;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        padding: 20px 0;
+        border-radius: 0 0 10px 10px;
+        z-index: 999;
+      }
+      
+      nav ul.show {
+        display: flex;
+      }
+      
+      nav ul li {
+        margin: 5px 20px;
+      }
+      
+      nav a {
+        display: block;
+        padding: 12px 20px;
+        border-radius: 5px;
+      }
+      
+      nav a:hover {
+        background: rgba(0, 102, 204, 0.05);
+      }
+      
+      .hamburger {
+        display: block;
+      }
+      
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      
+      .typewriter {
+        font-size: 1rem;
+      }
+      
+      .slide img {
+        height: 350px;
+      }
+      
+      .chat-window-floating {
+        width: 90%;
+        right: 5%;
+        bottom: 100px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      section {
+        padding: 40px 0;
+      }
+      
+      .hero-text {
+        padding: 20px;
+      }
+      
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+      
+      .typewriter {
+        font-size: 0.9rem;
+      }
+      
+      .slide img {
+        height: 300px;
+      }
+      
+      .feature-card {
+        padding: 25px 20px;
+      }
+      
+      .modal-content {
+        margin: 20px;
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <a href="index.html" class="logo"><img src="logo.png" alt="Royal African College Logo"></a>
+      <button class="hamburger" aria-label="Toggle Menu">&#9776;</button>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="admissions.html">Admissions</a></li>
+          <li><a href="academics.html">Academics</a></li>
+          <li><a href="portal.html">Student Portal</a></li>
+          <li><a href="profile.html">Profile</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="slideshow-container">
+        <div class="slide fade">
+          <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070" alt="College campus">
+        </div>
+        <div class="slide fade">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071" alt="Students studying">
+        </div>
+        <div class="slide fade">
+          <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070" alt="Graduation ceremony">
+        </div>
+      </div>
+      <div class="container hero-text">
+        <h1>Welcome to Royal African College</h1>
+        <p class="typewriter">A premier institution for higher education in Africa, offering Free 100% online, flexible, and affordable learning.</p>
+      </div>
+    </section>
+
+    <section class="why-choose-us">
+      <div class="container">
+        <h2>Why Choose Royal African College?</h2>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <img src="https://img.icons8.com/ios/100/online.png" alt="Online learning">
+            </div>
+            <h3>100% Online Learning</h3>
+            <p>Study anytime, anywhere with our state-of-the-art platform</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <img src="https://img.icons8.com/ios/100/money-bag.png" alt="No tuition fees">
+            </div>
+            <h3>No Tuition Fees</h3>
+            <p>Pay only a small application and exam fee</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <img src="https://img.icons8.com/ios/100/certificate.png" alt="Globally recognized">
+            </div>
+            <h3>Globally Recognized</h3>
+            <p>Accredited by the Global Council for Online Education (GCOE)</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <img src="https://img.icons8.com/ios/100/clock--v1.png" alt="Flexible learning">
+            </div>
+            <h3>Flexible & Self-Paced</h3>
+            <p>Learn at your own speed with personalized schedules</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <img src="https://img.icons8.com/ios/100/africa.png" alt="Pan-African access">
+            </div>
+            <h3>Pan-African Access</h3>
+            <p>Students from all over Africa welcome and supported</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="apply-now">
+      <div class="container">
+        <a href="portal.html#signup-form" class="btn btn-apply">Apply Now</a>
+      </div>
+    </section>
+
+    <section class="student-portal">
+      <div class="container">
+        <h2>Student Portal</h2>
+        <p>Already a student? Access your dashboard to manage courses, assignments, and progress tracking:</p>
+        <a href="portal.html" class="btn btn-outline">Log In to Student Portal</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Education Advisor Chat Launcher -->
+  <div id="chat-launcher" class="chat-launcher">
+    <img src="https://img.icons8.com/color/48/000000/chat--v1.png" alt="Chat"/>
+  </div>
+
+  <!-- Education Advisor Chat Window -->
+  <div id="advisor-chat-window" class="chat-window-floating hidden">
+    <div class="chat-header">
+      <h3>Education Advisor</h3>
+      <span id="close-chat" class="close-chat-button">&times;</span>
+    </div>
+    <div id="chat-messages" class="chat-messages">
+      <div class="message bot-message">
+        <p>Hello! I'm your Education Advisor. Tell me a little about your educational background and what you'd like to achieve, and I'll recommend a path for you.</p>
+      </div>
+    </div>
+    <form id="chat-form" class="chat-input-form">
+      <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off">
+      <button type="submit" class="btn">Send</button>
+    </form>
+  </div>
+
+  <!-- Modal -->
+  <div id="popup-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <div id="popup-content">
+        <h2>Join Our Community!</h2>
+        <p>Sign up today to start your journey with us. It's free, flexible, and fully online. Access world-class education designed for African students.</p>
+        <a href="portal.html#signup-form" class="btn">Sign Up Now</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Royal African College. All rights reserved.</p>
+      <p>Empowering African students through accessible, quality education</p>
+    </div>
+  </footer>
+
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="app.js"></script>
+  <script src="slider.js"></script>
+  <script src="popup.js"></script>
+  <script src="ai-advisor.js"></script>
+
+  <script>
+    // Mobile Menu Toggle
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('nav ul');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+    });
+    
+    // Simple Slideshow Functionality
+    let slideIndex = 0;
+    showSlides();
+    
+    function showSlides() {
+      const slides = document.querySelectorAll('.slide');
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = 'none';
+      }
+      slideIndex++;
+      if (slideIndex > slides.length) {slideIndex = 1}
+      slides[slideIndex-1].style.display = 'block';
+      setTimeout(showSlides, 5000); // Change image every 5 seconds
+    }
+    
+    // Chat Toggle
+    const chatLauncher = document.getElementById('chat-launcher');
+    const chatWindow = document.getElementById('advisor-chat-window');
+    const closeChat = document.getElementById('close-chat');
+    
+    chatLauncher.addEventListener('click', () => {
+      chatWindow.classList.toggle('hidden');
+    });
+    
+    closeChat.addEventListener('click', () => {
+      chatWindow.classList.add('hidden');
+    });
+    
+    // Modal Functionality
+    const modal = document.getElementById('popup-modal');
+    const closeBtn = document.querySelector('.close-button');
+    
+    // Show modal after 5 seconds
+    setTimeout(() => {
+      modal.style.display = 'block';
+    }, 5000);
+    
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+    
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

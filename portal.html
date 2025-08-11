@@ -1,0 +1,729 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Royal African College</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #004a99;
+            --accent: #ffb400;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #fff;
+            --gray: #6c757d;
+            --gray-light: #f1f5f9;
+            --border: #e2e8f0;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #f9f9f9 0%, #f0f7ff 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            z-index: -1;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Auth Section */
+        .auth-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .auth-container {
+                flex-direction: row;
+            }
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        .auth-header h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-header p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .auth-forms {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .auth-form {
+            margin-bottom: 2rem;
+        }
+
+        .auth-form h3 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .auth-form h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        input, select, textarea, button {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--text-light);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,102,204,0.3);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+            color: var(--gray);
+        }
+
+        /* Portal Container */
+        .portal-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 3rem auto;
+            max-width: 1200px;
+        }
+
+        @media (min-width: 992px) {
+            .portal-container {
+                flex-direction: row;
+            }
+        }
+
+        .profile-sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        @media (min-width: 992px) {
+            .profile-sidebar {
+                width: 300px;
+                flex-shrink: 0;
+            }
+        }
+
+        #profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: var(--box-shadow);
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .profile-sidebar p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,102,204,0.2);
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,102,204,0.3);
+        }
+
+        .portal-content {
+            flex: 1;
+        }
+
+        .portal-header {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .portal-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .portal-header h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .portal-header p {
+            color: var(--gray);
+            max-width: 600px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            transition: var(--transition);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 102, 204, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .feature-link:hover {
+            color: var(--primary-dark);
+            gap: 12px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.8);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        footer .container {
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .portal-container {
+                margin: 1.5rem auto;
+            }
+            
+            .auth-container {
+                margin: 1.5rem auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .auth-header {
+                padding: 1.5rem;
+            }
+            
+            .auth-forms {
+                padding: 1.5rem;
+            }
+            
+            .portal-header {
+                padding: 1.5rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><img src="logo.png" alt="Royal African College Logo"></a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li id="profile-nav-link" class="hidden"><a href="profile.html">Profile</a></li>
+                <li id="auth-status"><a href="#" id="login-logout">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Auth Section - Hidden by default -->
+        <section id="auth-section" class="hidden">
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2>Welcome to Royal African College</h2>
+                    <p>Access your student portal to manage your courses, connect with peers, and track your academic progress.</p>
+                    <div style="font-size: 4rem; margin-top: 2rem;">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                </div>
+                <div class="auth-forms">
+                    <!-- Login form -->
+                    <form id="login-form" class="auth-form">
+                        <h3>Login to Your Account</h3>
+                        <div class="form-group">
+                            <input type="email" id="login-email" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="login-password" placeholder="Password" required>
+                        </div>
+                        <button type="submit">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                    
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <!-- Signup form -->
+                    <form id="signup-form" class="auth-form">
+                        <h3>Create New Account</h3>
+                        <div class="form-group">
+                            <input type="text" id="signup-name" placeholder="Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="signup-email" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="signup-password" placeholder="Create Password" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="signup-age" placeholder="Age" min="16" max="100" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="signup-program" required>
+                                <option value="" disabled selected>Select Program of Interest</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Business Administration">Business Administration</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Public Health">Public Health</option>
+                                <option value="Education">Education</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-profile-picture" style="text-align: left; display: block; margin-bottom: 8px;">Profile Picture:</label>
+                            <input type="file" id="signup-profile-picture" accept="image/jpeg,image/png">
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <input type="checkbox" id="signup-terms" required style="width: auto; display: inline-block;">
+                            <label for="signup-terms" style="display: inline-block; width: calc(100% - 25px); vertical-align: top; padding-left: 8px;">
+                                I accept the <a href="#" style="color: var(--primary);">Terms and Conditions</a>
+                            </label>
+                        </div>
+                        <button type="submit">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+                    <p id="auth-error" class="error-message"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portal Content - Hidden until logged in -->
+        <div class="portal-container hidden" id="portal-content">
+            <div class="profile-sidebar">
+                <img id="profile-picture" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964" alt="Profile Picture">
+                <h2 id="user-name">Alex Johnson</h2>
+                <p id="user-email">alex.johnson@student.royalafricancollege.org</p>
+                <p><strong>Program:</strong> Computer Science</p>
+                <button id="logout-button" class="btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            
+            <div class="portal-content">
+                <div class="portal-header">
+                    <h1>Student Portal Dashboard</h1>
+                    <p>Welcome back! Here you can access all your academic resources and tools.</p>
+                </div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Academic Dashboard</h3>
+                        <p>View your academic progress, grades, and course completion status.</p>
+                        <a href="dashboard.html" class="feature-link">
+                            Go to Dashboard <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>Chat & Collaboration</h3>
+                        <p>Connect with classmates, join study groups, and collaborate on projects.</p>
+                        <a href="chat.html" class="feature-link">
+                            Start Chatting <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <h3>Profile Management</h3>
+                        <p>Update your personal information, profile picture, and academic details.</p>
+                        <a href="profile.html" class="feature-link">
+                            Edit Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>Course Catalog</h3>
+                        <p>Browse available courses, enroll in new programs, and access learning materials.</p>
+                        <a href="course.html" class="feature-link">
+                            Explore Courses <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>Academic Calendar</h3>
+                        <p>View important dates, deadlines, and exam schedules for your courses.</p>
+                        <a href="#" class="feature-link">
+                            View Calendar <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>Assignments</h3>
+                        <p>Access your current assignments, submit work, and view instructor feedback.</p>
+                        <a href="#" class="feature-link">
+                            View Assignments <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Royal African College. All rights reserved.</p>
+            <p class="small" style="margin-top: 10px;">Empowering African students through accessible, quality education</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simulating authentication state
+        document.addEventListener('DOMContentLoaded', function() {
+            const authSection = document.getElementById('auth-section');
+            const portalContent = document.getElementById('portal-content');
+            const loginLogoutLink = document.getElementById('login-logout');
+            const profileNavLink = document.getElementById('profile-nav-link');
+            const logoutButton = document.getElementById('logout-button');
+            
+            // Check if user is logged in (in a real app, this would be from Firebase)
+            const isLoggedIn = false; // Change to true to see the portal view
+            
+            if (isLoggedIn) {
+                authSection.classList.add('hidden');
+                portalContent.classList.remove('hidden');
+                profileNavLink.classList.remove('hidden');
+                loginLogoutLink.textContent = "Logout";
+            } else {
+                authSection.classList.remove('hidden');
+                portalContent.classList.add('hidden');
+                profileNavLink.classList.add('hidden');
+                loginLogoutLink.textContent = "Login";
+            }
+            
+            // Toggle auth section when login/logout is clicked
+            loginLogoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (isLoggedIn) {
+                    // Logout logic
+                    authSection.classList.remove('hidden');
+                    portalContent.classList.add('hidden');
+                    profileNavLink.classList.add('hidden');
+                    loginLogoutLink.textContent = "Login";
+                } else {
+                    // Login logic
+                    authSection.classList.remove('hidden');
+                }
+            });
+            
+            // Logout button
+            logoutButton.addEventListener('click', function() {
+                authSection.classList.remove('hidden');
+                portalContent.classList.add('hidden');
+                profileNavLink.classList.add('hidden');
+                loginLogoutLink.textContent = "Login";
+            });
+            
+            // Form submission handlers
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Simulate login
+                authSection.classList.add('hidden');
+                portalContent.classList.remove('hidden');
+                profileNavLink.classList.remove('hidden');
+                loginLogoutLink.textContent = "Logout";
+            });
+            
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Simulate signup and login
+                authSection.classList.add('hidden');
+                portalContent.classList.remove('hidden');
+                profileNavLink.classList.remove('hidden');
+                loginLogoutLink.textContent = "Logout";
+            });
+        });
+    </script>
+</body>
+</html>

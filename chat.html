@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Chat - Royal African College</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066cc;
+            --primary-dark: #004a99;
+            --accent: #ffb400;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #fff;
+            --gray: #6c757d;
+            --gray-light: #f1f5f9;
+            --border: #e2e8f0;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #f9f9f9 0%, #f0f7ff 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            z-index: -1;
+            clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+        }
+
+        nav a::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 150px);
+        }
+
+        @media (min-width: 992px) {
+            .chat-container {
+                flex-direction: row;
+                height: calc(100vh - 180px);
+            }
+        }
+
+        /* Chat Sidebar */
+        .chat-sidebar {
+            width: 100%;
+            background: var(--gray-light);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 992px) {
+            .chat-sidebar {
+                width: 320px;
+            }
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .contact {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .contact:hover, .contact.active {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .contact-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .contact-info p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .contact-status {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-align: right;
+        }
+
+        .online-status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+
+        /* Chat Main Area */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .chat-header-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .chat-header-info {
+            flex: 1;
+        }
+
+        .chat-header-info h2 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .chat-header-info p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-actions button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-light);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .chat-actions button:hover {
+            background: var(--primary-light);
+        }
+
+        .chat-messages-area {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.05"><rect width="100" height="100" fill="none" stroke="%230066cc" stroke-width="2"/></svg>');
+            background-size: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message-date {
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .received {
+            background: white;
+            border: 1px solid var(--border);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .sent {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+
+        .received .message-meta {
+            color: var(--gray);
+        }
+
+        .sent .message-meta {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .chat-input-area {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            font-family: inherit;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+        }
+
+        .chat-input-area button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .chat-input-area button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,102,204,0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: rgba(255,255,255,0.8);
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo span {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .footer-logo p {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .footer-links h4 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-header {
+                padding: 1rem;
+            }
+            
+            .chat-messages-area {
+                padding: 1rem;
+            }
+            
+            .chat-input-area {
+                padding: 1rem;
+            }
+            
+            .chat-message {
+                max-width: 90%;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .contact {
+                padding: 0.8rem;
+            }
+            
+            .contact-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <a href="index.html" class="logo"><img src="logo.png" alt="Royal African College Logo"></a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li id="student-chat-nav-link"><a href="chat.html">Chat</a></li>
+                <li id="announcements-nav-link"><a href="dashboard.html#platform-news-section">Announcements</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="profile-nav-link"><a href="profile.html">Profile</a></li>
+                <li id="auth-status"><a href="#" id="login-logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Chat Sidebar -->
+        <div class="chat-sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-comments"></i> Student Chat</h1>
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search contacts...">
+                </div>
+            </div>
+            
+            <div class="contacts-list">
+                <div class="contact active">
+                    <div class="contact-avatar" style="background: #ff6b6b;">MJ</div>
+                    <div class="contact-info">
+                        <h3>Mary Johnson</h3>
+                        <p>Hey, did you finish the assignment?</p>
+                    </div>
+                    <div class="contact-status">
+                        10:45 AM
+                        <span class="online-status"></span>
+                    </div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar" style="background: #4ecdc4;">DK</div>
+                    <div class="contact-info">
+                        <h3>David Kimani</h3>
+                        <p>Study group tomorrow at 3 PM?</p>
+                    </div>
+                    <div class="contact-status">
+                        9:30 AM
+                        <span class="online-status"></span>
+                    </div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar" style="background: #1a535c;">SA</div>
+                    <div class="contact-info">
+                        <h3>Sarah Ahmed</h3>
+                        <p>Thanks for sharing the notes!</p>
+                    </div>
+                    <div class="contact-status">
+                        Yesterday
+                    </div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar" style="background: #ff9f1c;">PB</div>
+                    <div class="contact-info">
+                        <h3>Paul Banda</h3>
+                        <p>Can you explain this concept?</p>
+                    </div>
+                    <div class="contact-status">
+                        Yesterday
+                    </div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar" style="background: #6a0572;">TN</div>
+                    <div class="contact-info">
+                        <h3>Tendai Ndlovu</h3>
+                        <p>See you in class!</p>
+                    </div>
+                    <div class="contact-status">
+                        Wednesday
+                    </div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar" style="background: #1b998b;">RM</div>
+                    <div class="contact-info">
+                        <h3>Rebecca Mensah</h3>
+                        <p>Project deadline extended</p>
+                    </div>
+                    <div class="contact-status">
+                        Tuesday
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Main Area -->
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="chat-header-avatar" style="background: #ff6b6b;">MJ</div>
+                <div class="chat-header-info">
+                    <h2>Mary Johnson</h2>
+                    <p>Online - Computer Science</p>
+                </div>
+                <div class="chat-actions">
+                    <button><i class="fas fa-phone"></i></button>
+                    <button><i class="fas fa-video"></i></button>
+                    <button><i class="fas fa-ellipsis-v"></i></button>
+                </div>
+            </div>
+            
+            <div class="chat-messages-area" id="chat-messages-area">
+                <div class="message-date">Today</div>
+                
+                <div class="chat-message received">
+                    <p>Hey there! Did you finish the assignment for Data Structures?</p>
+                    <div class="message-meta">
+                        <span>Mary Johnson</span>
+                        <span>10:30 AM</span>
+                    </div>
+                </div>
+                
+                <div class="chat-message sent">
+                    <p>Almost done! Just finishing up the last problem. How about you?</p>
+                    <div class="message-meta">
+                        <span>You</span>
+                        <span>10:32 AM</span>
+                    </div>
+                </div>
+                
+                <div class="chat-message received">
+                    <p>I'm stuck on problem 3. Can you help me understand the recursion part?</p>
+                    <div class="message-meta">
+                        <span>Mary Johnson</span>
+                        <span>10:33 AM</span>
+                    </div>
+                </div>
+                
+                <div class="chat-message sent">
+                    <p>Sure! The key is to break it down into smaller subproblems. Remember the base case is when n == 0</p>
+                    <div class="message-meta">
+                        <span>You</span>
+                        <span>10:35 AM</span>
+                    </div>
+                </div>
+                
+                <div class="chat-message received">
+                    <p>That makes sense. I think I was missing the base case. Thanks!</p>
+                    <div class="message-meta">
+                        <span>Mary Johnson</span>
+                        <span>10:37 AM</span>
+                    </div>
+                </div>
+                
+                <div class="chat-message sent">
+                    <p>No problem! Let me know if you need more help. Are we still meeting for the study group tomorrow?</p>
+                    <div class="message-meta">
+                        <span>You</span>
+                        <span>10:38 AM</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <input type="text" id="chat-message-input" placeholder="Type your message...">
+                <button id="send-chat-message-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <span>Royal African College</span>
+                <p>Empowering students through accessible education</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Academic Calendar</a></li>
+                    <li><a href="#">Library</a></li>
+                    <li><a href="#">Student Services</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="mailto:admissions@royalafricancollege.mw">Admissions</a></li>
+                    <li><a href="mailto:info@royalafricancollege.mw">General Inquiries</a></li>
+                    <li><a href="mailto:registrar@royalafricancollege.mw">Registrar</a></li>
+                    <li><a href="https://wa.me/265996982449" target="_blank">WhatsApp Us</a></li>
+                    <li><a href="#">Feedback</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2024 Royal African College. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simulate sending a message
+        document.getElementById('send-chat-message-btn').addEventListener('click', function() {
+            const input = document.getElementById('chat-message-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                const chatArea = document.getElementById('chat-messages-area');
+                
+                // Create new message element
+                const messageElement = document.createElement('div');
+                messageElement.className = 'chat-message sent';
+                messageElement.innerHTML = `
+                    <p>${message}</p>
+                    <div class="message-meta">
+                        <span>You</span>
+                        <span>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                `;
+                
+                // Add to chat area
+                chatArea.appendChild(messageElement);
+                
+                // Clear input
+                input.value = '';
+                
+                // Scroll to bottom
+                chatArea.scrollTop = chatArea.scrollHeight;
+                
+                // Simulate reply after 1-3 seconds
+                setTimeout(simulateReply, 1000 + Math.random() * 2000);
+            }
+        });
+        
+        // Simulate pressing Enter to send message
+        document.getElementById('chat-message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('send-chat-message-btn').click();
+            }
+        });
+        
+        // Simulate a reply
+        function simulateReply() {
+            const replies = [
+                "Thanks for that!",
+                "I understand now.",
+                "Can we discuss this more tomorrow?",
+                "That's really helpful!",
+                "I'll work on that right away.",
+                "Do you have the lecture notes for today?",
+                "Let's meet after class."
+            ];
+            
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+            const chatArea = document.getElementById('chat-messages-area');
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = 'chat-message received';
+            messageElement.innerHTML = `
+                <p>${randomReply}</p>
+                <div class="message-meta">
+                    <span>Mary Johnson</span>
+                    <span>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+            `;
+            
+            chatArea.appendChild(messageElement);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        // Contact selection
+        document.querySelectorAll('.contact').forEach(contact => {
+            contact.addEventListener('click', function() {
+                document.querySelectorAll('.contact').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update chat header
+                const name = this.querySelector('h3').textContent;
+                const avatar = this.querySelector('.contact-avatar').textContent;
+                const color = this.querySelector('.contact-avatar').style.backgroundColor;
+                
+                document.querySelector('.chat-header-avatar').textContent = avatar;
+                document.querySelector('.chat-header-avatar').style.backgroundColor = color;
+                document.querySelector('.chat-header-info h2').textContent = name;
+                
+                // Clear chat area and add new messages
+                const chatArea = document.getElementById('chat-messages-area');
+                chatArea.innerHTML = `<div class="message-date">Today</div>`;
+                
+                // Add initial message
+                const messageElement = document.createElement('div');
+                messageElement.className = 'chat-message received';
+                messageElement.innerHTML = `
+                    <p>Hi there! Let's chat about our studies.</p>
+                    <div class="message-meta">
+                        <span>${name}</span>
+                        <span>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                `;
+                
+                chatArea.appendChild(messageElement);
+            });
+        });
+        
+        // Scroll to bottom of chat initially
+        window.addEventListener('load', function() {
+            const chatArea = document.getElementById('chat-messages-area');
+            chatArea.scrollTop = chatArea.scrollHeight;
+        });
+    </script>
+</body>
+</html>
