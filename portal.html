@@ -658,72 +658,7 @@
         </div>
     </footer>
 
-    <script>
-        // Simulating authentication state
-        document.addEventListener('DOMContentLoaded', function() {
-            const authSection = document.getElementById('auth-section');
-            const portalContent = document.getElementById('portal-content');
-            const loginLogoutLink = document.getElementById('login-logout');
-            const profileNavLink = document.getElementById('profile-nav-link');
-            const logoutButton = document.getElementById('logout-button');
-            
-            // Check if user is logged in (in a real app, this would be from Firebase)
-            const isLoggedIn = false; // Change to true to see the portal view
-            
-            if (isLoggedIn) {
-                authSection.classList.add('hidden');
-                portalContent.classList.remove('hidden');
-                profileNavLink.classList.remove('hidden');
-                loginLogoutLink.textContent = "Logout";
-            } else {
-                authSection.classList.remove('hidden');
-                portalContent.classList.add('hidden');
-                profileNavLink.classList.add('hidden');
-                loginLogoutLink.textContent = "Login";
-            }
-            
-            // Toggle auth section when login/logout is clicked
-            loginLogoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (isLoggedIn) {
-                    // Logout logic
-                    authSection.classList.remove('hidden');
-                    portalContent.classList.add('hidden');
-                    profileNavLink.classList.add('hidden');
-                    loginLogoutLink.textContent = "Login";
-                } else {
-                    // Login logic
-                    authSection.classList.remove('hidden');
-                }
-            });
-            
-            // Logout button
-            logoutButton.addEventListener('click', function() {
-                authSection.classList.remove('hidden');
-                portalContent.classList.add('hidden');
-                profileNavLink.classList.add('hidden');
-                loginLogoutLink.textContent = "Login";
-            });
-            
-            // Form submission handlers
-            document.getElementById('login-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // Simulate login
-                authSection.classList.add('hidden');
-                portalContent.classList.remove('hidden');
-                profileNavLink.classList.remove('hidden');
-                loginLogoutLink.textContent = "Logout";
-            });
-            
-            document.getElementById('signup-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // Simulate signup and login
-                authSection.classList.add('hidden');
-                portalContent.classList.remove('hidden');
-                profileNavLink.classList.remove('hidden');
-                loginLogoutLink.textContent = "Logout";
-            });
-        });
-    </script>
+    <script type="module" src="./firebase-config.js"></script>
+    <script type="module" src="./portal.js"></script>
 </body>
 </html>
