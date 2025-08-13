@@ -123,7 +123,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         /* Auth Section */
@@ -489,8 +489,8 @@
     </nav>
 
     <main class="container">
-        <!-- Auth Section - Hidden by default -->
-        <section id="auth-section" class="hidden">
+        <!-- Auth Section - Visible by default -->
+        <section id="auth-section">
             <div class="auth-container">
                 <div class="auth-header">
                     <h2>Welcome to Royal African College</h2>
@@ -563,7 +563,7 @@
         </section>
 
         <!-- Portal Content - Hidden until logged in -->
-        <div class="portal-container hidden" id="portal-content">
+        <div class="portal-container" id="portal-content" style="display: none;">
             <div class="profile-sidebar">
                 <img id="profile-picture" src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23ccc'%3e%3cpath d='M50 50a25 25 0 100-50 25 25 0 000 50zm0 10c-16.57 0-30 13.43-30 30v10h60v-10c0-16.57-13.43-30-30-30z'/%3e%3c/svg%3e" alt="Profile Picture">
                 <h2 id="user-name"></h2>

@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     onAuthStateChanged(auth, (user) => {
         if (user) {
             // User is signed in.
-            authSection.classList.add('hidden');
-            portalContainer.classList.remove('hidden');
+            authSection.style.display = 'none';
+            portalContainer.style.display = 'flex';
 
-            const userDbRef = ref(db, 'users/' + user.uid);
+            const userDbRef = dbRef(db, 'users/' + user.uid);
             get(userDbRef).then((snapshot) => {
                 const userData = snapshot.val();
                 if (userData) {
@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else {
             // User is signed out.
-            authSection.classList.remove('hidden');
-            portalContainer.classList.add('hidden');
+            authSection.style.display = 'block';
+            portalContainer.style.display = 'none';
         }
     });
 
