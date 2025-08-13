@@ -9,14 +9,13 @@ import { getStorage } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAYvFFHRwsS6LQvfpU-TBQiez1L_E7HcKQ",
-  authDomain: "cheza-e769a.firebaseapp.com",
-  databaseURL: "https://cheza-e769a-default-rtdb.firebaseio.com",
-  projectId: "cheza-e769a",
-  storageBucket: "cheza-e769a.appspot.com",
-  messagingSenderId: "462385709527",
-  appId: "1:462385709527:web:f5341ac32d4b3ec72ccb92",
-  measurementId: "G-HV76EHW0LR" // Analytics measurementId, not used by current app features
+  apiKey: "AIzaSyDmUY1r58_Yt3V2yKg_2pfFcpKzeOMQQDU",
+  authDomain: "cheza-31e92.firebaseapp.com",
+  databaseURL: "https://cheza-31e92-default-rtdb.firebaseio.com",
+  projectId: "cheza-31e92",
+  storageBucket: "cheza-31e92.appspot.com",
+  messagingSenderId: "370637402391",
+  appId: "1:370637402391:web:f02bf95f74de2b13ddc752"
 };
 
 // Initialize Firebase

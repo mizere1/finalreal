@@ -1,21 +1,31 @@
-import { auth, db } from './firebase-config.js';
+import { auth, db, storage } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 import { ref, get, update } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const editProfileBtn = document.getElementById('edit-profile-btn');
     const saveProfileBtn = document.getElementById('save-profile-btn');
+    const changePhotoBtn = document.getElementById('change-photo-btn');
+
+    // Disable photo change button until user is loaded
+    if(changePhotoBtn) changePhotoBtn.disabled = true;
+    if(editProfileBtn) editProfileBtn.disabled = true;
+
     let currentUser;
     let currentUserData;
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUser = user;
+            // Enable photo change button now that we have a user
+            if(changePhotoBtn) changePhotoBtn.disabled = false;
             const userDbRef = ref(db, 'users/' + user.uid);
             get(userDbRef).then((snapshot) => {
                 if (snapshot.exists()) {
                     currentUserData = snapshot.val();
                     populateProfileData(currentUserData);
+                    if(editProfileBtn) editProfileBtn.disabled = false; // Enable edit button
                 } else {
                     console.log("No data available for this user.");
                 }
@@ -76,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const editElements = document.querySelectorAll('.edit-mode');
 
         if (isEditing) {
-            // Populate input fields with current data
+            // Populate input fields with current data before showing them
             document.getElementById('edit-user-name').value = currentUserData.displayName || '';
             document.getElementById('edit-user-age').value = currentUserData.age || '';
             document.getElementById('edit-user-program').value = currentUserData.programOfInterest || '';
@@ -92,13 +102,17 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('edit-user-emergency-relationship').value = currentUserData.emergencyContact ? currentUserData.emergencyContact.relationship : '';
             document.getElementById('edit-user-emergency-phone').value = currentUserData.emergencyContact ? currentUserData.emergencyContact.phone : '';
 
-            viewElements.forEach(el => el.classList.add('hidden'));
-            editElements.forEach(el => el.classList.remove('hidden'));
+            // Directly manipulate style.display
+            viewElements.forEach(el => el.style.display = 'none');
+            editElements.forEach(el => el.style.display = 'inline-block'); // or 'block' depending on desired layout
+
             editProfileBtn.classList.add('hidden');
             saveProfileBtn.classList.remove('hidden');
         } else {
-            viewElements.forEach(el => el.classList.remove('hidden'));
-            editElements.forEach(el => el.classList.add('hidden'));
+            // Directly manipulate style.display
+            viewElements.forEach(el => el.style.display = 'inline-block'); // or 'block'
+            editElements.forEach(el => el.style.display = 'none');
+
             editProfileBtn.classList.remove('hidden');
             saveProfileBtn.classList.add('hidden');
         }
@@ -127,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'academicBackground/previousEducation': document.getElementById('edit-user-prev-education').value,
             'emergencyContact/name': document.getElementById('edit-user-emergency-name').value,
             'emergencyContact/relationship': document.getElementById('edit-user-emergency-relationship').value,
-            'emergencyContact/phone': document.getElementById('edit-user-emergency-phone').value,
+            'emergencyContact/phone': document.getElementById('edit-user-emergency-phone').value
         };
 
         const userDbRef = ref(db, 'users/' + currentUser.uid);
@@ -145,5 +159,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error updating profile:', error);
                 alert('Failed to update profile.');
             });
-    });
+        });
+    }
+
+    const uploadPhotoInput = document.getElementById('upload-photo');
+
+    if (changePhotoBtn) {
+        changePhotoBtn.addEventListener('click', () => {
+            if (!changePhotoBtn.disabled) {
+                uploadPhotoInput.click();
+            }
+        });
+    }
+
+    if (uploadPhotoInput) {
+        uploadPhotoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentUser) return;
+
+            const profilePicRef = storageRef(storage, `profile_pictures/${currentUser.uid}`);
+            uploadBytes(profilePicRef, file).then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    const userDbRef = ref(db, 'users/' + currentUser.uid);
+                    update(userDbRef, { profilePictureURL: downloadURL });
+                    document.getElementById('profile-picture').src = downloadURL;
+                    alert('Profile picture updated!');
+                });
+            }).catch((error) => {
+                console.error("Error uploading photo: ", error);
+                alert('Failed to upload photo.');
+            });
+        });
+    }
 });

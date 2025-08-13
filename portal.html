@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -565,10 +565,10 @@
         <!-- Portal Content - Hidden until logged in -->
         <div class="portal-container hidden" id="portal-content">
             <div class="profile-sidebar">
-                <img id="profile-picture" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964" alt="Profile Picture">
-                <h2 id="user-name">Alex Johnson</h2>
-                <p id="user-email">alex.johnson@student.royalafricancollege.org</p>
-                <p><strong>Program:</strong> Computer Science</p>
+                <img id="profile-picture" src="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23ccc'%3e%3cpath d='M50 50a25 25 0 100-50 25 25 0 000 50zm0 10c-16.57 0-30 13.43-30 30v10h60v-10c0-16.57-13.43-30-30-30z'/%3e%3c/svg%3e" alt="Profile Picture">
+                <h2 id="user-name"></h2>
+                <p id="user-email"></p>
+                <p><strong id="user-program"></strong></p>
                 <button id="logout-button" class="btn">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
@@ -583,11 +583,22 @@
                 <div class="feature-grid">
                     <div class="feature-card">
                         <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Smart Learning</h3>
+                        <p>Access our AI-powered, personalized learning platform to master new skills at your own pace.</p>
+                        <a href="smart-learning.html" class="feature-link">
+                            Start Learning <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
                             <i class="fas fa-chart-line"></i>
                         </div>
                         <h3>Academic Dashboard</h3>
                         <p>View your academic progress, grades, and course completion status.</p>
-                        <a href="dashboard.html" class="feature-link">
+                        <a href="#" class="feature-link">
                             Go to Dashboard <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
@@ -658,72 +669,7 @@
         </div>
     </footer>
 
-    <script>
-        // Simulating authentication state
-        document.addEventListener('DOMContentLoaded', function() {
-            const authSection = document.getElementById('auth-section');
-            const portalContent = document.getElementById('portal-content');
-            const loginLogoutLink = document.getElementById('login-logout');
-            const profileNavLink = document.getElementById('profile-nav-link');
-            const logoutButton = document.getElementById('logout-button');
-            
-            // Check if user is logged in (in a real app, this would be from Firebase)
-            const isLoggedIn = false; // Change to true to see the portal view
-            
-            if (isLoggedIn) {
-                authSection.classList.add('hidden');
-                portalContent.classList.remove('hidden');
-                profileNavLink.classList.remove('hidden');
-                loginLogoutLink.textContent = "Logout";
-            } else {
-                authSection.classList.remove('hidden');
-                portalContent.classList.add('hidden');
-                profileNavLink.classList.add('hidden');
-                loginLogoutLink.textContent = "Login";
-            }
-            
-            // Toggle auth section when login/logout is clicked
-            loginLogoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (isLoggedIn) {
-                    // Logout logic
-                    authSection.classList.remove('hidden');
-                    portalContent.classList.add('hidden');
-                    profileNavLink.classList.add('hidden');
-                    loginLogoutLink.textContent = "Login";
-                } else {
-                    // Login logic
-                    authSection.classList.remove('hidden');
-                }
-            });
-            
-            // Logout button
-            logoutButton.addEventListener('click', function() {
-                authSection.classList.remove('hidden');
-                portalContent.classList.add('hidden');
-                profileNavLink.classList.add('hidden');
-                loginLogoutLink.textContent = "Login";
-            });
-            
-            // Form submission handlers
-            document.getElementById('login-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // Simulate login
-                authSection.classList.add('hidden');
-                portalContent.classList.remove('hidden');
-                profileNavLink.classList.remove('hidden');
-                loginLogoutLink.textContent = "Logout";
-            });
-            
-            document.getElementById('signup-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                // Simulate signup and login
-                authSection.classList.add('hidden');
-                portalContent.classList.remove('hidden');
-                profileNavLink.classList.remove('hidden');
-                loginLogoutLink.textContent = "Logout";
-            });
-        });
-    </script>
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="portal.js"></script>
 </body>
 </html>
